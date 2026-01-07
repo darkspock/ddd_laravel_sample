@@ -337,6 +337,8 @@ MIT License - See LICENSE file for details.
 
 ## Book
 
-This sample accompanies **"Pragmatic DDD with Laravel"** by John Macias.
+This sample accompanies **"Pragmatic DDD with Laravel"** by Juan Macias.
 
-Learn more at [pragmaticddd.com](https://pragmaticddd.com)
+**Book website:** [pragmaticddd.com](https://pragmaticddd.com)
+
+**Purchase the book:** [pragmaticddd.com/get/p3k7m9x2](https://pragmaticddd.com/get/p3k7m9x2)

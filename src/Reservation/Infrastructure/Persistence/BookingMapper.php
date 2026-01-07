@@ -43,6 +43,8 @@ final class BookingMapper
             confirmedAt: $model->confirmed_at ? new DateTimeImmutable($model->confirmed_at) : null,
             cancelledAt: $model->cancelled_at ? new DateTimeImmutable($model->cancelled_at) : null,
             cancellationReason: $model->cancellation_reason,
+            completedAt: $model->completed_at ? new DateTimeImmutable($model->completed_at) : null,
+            noShowAt: $model->no_show_at ? new DateTimeImmutable($model->no_show_at) : null,
         );
 
         $booking->setIsNew(false);
@@ -78,6 +80,8 @@ final class BookingMapper
             'confirmed_at' => $booking->confirmedAt?->format('Y-m-d H:i:s'),
             'cancelled_at' => $booking->cancelledAt?->format('Y-m-d H:i:s'),
             'cancellation_reason' => $booking->cancellationReason,
+            'completed_at' => $booking->completedAt?->format('Y-m-d H:i:s'),
+            'no_show_at' => $booking->noShowAt?->format('Y-m-d H:i:s'),
         ];
     }
 

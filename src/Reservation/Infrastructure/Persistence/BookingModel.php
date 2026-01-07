@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $confirmed_at
  * @property string|null $cancelled_at
  * @property string|null $cancellation_reason
+ * @property string|null $completed_at
+ * @property string|null $no_show_at
  * @property string $created_at
  * @property string $updated_at
  * @property-read Collection<int, BookingProductModel> $products
@@ -44,6 +46,8 @@ final class BookingModel extends Model
         'confirmed_at',
         'cancelled_at',
         'cancellation_reason',
+        'completed_at',
+        'no_show_at',
     ];
 
     protected $casts = [

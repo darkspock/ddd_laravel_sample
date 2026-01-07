@@ -8,10 +8,14 @@ use DateTimeImmutable;
 use Src\Reservation\Domain\Enums\BookingStatus;
 use Src\Reservation\Domain\Enums\ProductType;
 use Src\Reservation\Domain\Events\BookingCancelledEvent;
+use Src\Reservation\Domain\Events\BookingCompletedEvent;
 use Src\Reservation\Domain\Events\BookingConfirmedEvent;
 use Src\Reservation\Domain\Events\BookingCreatedEvent;
+use Src\Reservation\Domain\Events\BookingMarkedAsNoShowEvent;
 use Src\Reservation\Domain\Exceptions\BookingCannotBeCancelledException;
+use Src\Reservation\Domain\Exceptions\BookingCannotBeCompletedException;
 use Src\Reservation\Domain\Exceptions\BookingCannotBeConfirmedException;
+use Src\Reservation\Domain\Exceptions\BookingCannotBeMarkedAsNoShowException;
 use Src\Reservation\Domain\ValueObjects\BookingId;
 use Src\Reservation\Domain\ValueObjects\ClientId;
 use Src\Reservation\Domain\ValueObjects\Money;
@@ -39,6 +43,8 @@ final class Booking extends BaseEntity
         public ?DateTimeImmutable $confirmedAt = null,
         public ?DateTimeImmutable $cancelledAt = null,
         public ?string $cancellationReason = null,
+        public ?DateTimeImmutable $completedAt = null,
+        public ?DateTimeImmutable $noShowAt = null,
     ) {
     }
 
@@ -93,6 +99,8 @@ final class Booking extends BaseEntity
         ?DateTimeImmutable $confirmedAt = null,
         ?DateTimeImmutable $cancelledAt = null,
         ?string $cancellationReason = null,
+        ?DateTimeImmutable $completedAt = null,
+        ?DateTimeImmutable $noShowAt = null,
     ): self {
         $booking = new self(
             id: $id,
@@ -105,6 +113,8 @@ final class Booking extends BaseEntity
             confirmedAt: $confirmedAt,
             cancelledAt: $cancelledAt,
             cancellationReason: $cancellationReason,
+            completedAt: $completedAt,
+            noShowAt: $noShowAt,
         );
 
         $booking->products = $products;
@@ -172,12 +182,26 @@ final class Booking extends BaseEntity
 
     public function complete(): void
     {
+        if ($this->status !== BookingStatus::CONFIRMED) {
+            throw BookingCannotBeCompletedException::notConfirmed($this->status->value);
+        }
+
         $this->status = BookingStatus::COMPLETED;
+        $this->completedAt = new DateTimeImmutable();
+
+        $this->recordLast(BookingCompletedEvent::fromEntity($this));
     }
 
     public function markAsNoShow(): void
     {
+        if ($this->status !== BookingStatus::CONFIRMED) {
+            throw BookingCannotBeMarkedAsNoShowException::notConfirmed($this->status->value);
+        }
+
         $this->status = BookingStatus::NO_SHOW;
+        $this->noShowAt = new DateTimeImmutable();
+
+        $this->recordLast(BookingMarkedAsNoShowEvent::fromEntity($this));
     }
 
     public function updatePartySize(PartySize $partySize): void
