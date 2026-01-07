@@ -1,0 +1,16 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+    level: max
+    paths:
+        - src
+        - Apps
+    fileExtensions:
+        - php
+    ignoreErrors:
+        - identifier: missingType.generics
+        - '#Trait .+ is used zero times and is not analysed#'
+
